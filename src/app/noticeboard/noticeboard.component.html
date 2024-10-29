@@ -1,0 +1,21 @@
+<div class="noticeboard-container">
+    <div class="messages">
+      <div *ngFor="let message of messages">
+        <p><strong>{{ message.sender }}:</strong> {{ message.text }}</p>
+      </div>
+    </div>
+    <form [formGroup]="noticeForm" (ngSubmit)="sendMessage()">
+      <mat-form-field appearance="fill">
+        <mat-label>Message</mat-label>
+        <input matInput formControlName="message" required>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Role/Group</mat-label>
+        <mat-select formControlName="role" required>
+          <mat-option value="user">User</mat-option>
+          <mat-option value="admin">Admin</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit" [disabled]="noticeForm.invalid">Send</button>
+    </form>
+  </div>

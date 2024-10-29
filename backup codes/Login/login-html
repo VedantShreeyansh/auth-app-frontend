@@ -1,0 +1,38 @@
+<!-- <div class="login-container">
+  <h2>Login</h2>
+  <form class="example-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <mat-form-field class="example-full-width">
+      <mat-label>Email</mat-label> <!-- Changed from Username to Email -->
+      <!-- <input type="text" matInput formControlName="email" [errorStateMatcher]="matcher" placeholder="Enter your email">
+      <mat-hint>Errors appear instantly!</mat-hint>
+      @if (loginForm.get('email')?.hasError('email') && !loginForm.get('email')?.hasError('required')){
+        <mat-error>Please enter a valid email address</mat-error>
+      }
+       @if (loginForm.get('email')?.hasError('required')){
+        <mat-error> Email is <strong>required</strong></mat-error>
+      }
+      @if (loginForm.get('email')?.hasError('minlength')){
+      <mat-error>Email must be at least <strong>3 characters</strong></mat-error>  
+      }
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <mat-label>Password</mat-label>
+      <input type="password" matInput formControlName="password" [errorStateMatcher]="matcher" placeholder="Enter your password" />
+      <mat-hint>Password must be at least 6 characters</mat-hint>
+      @if (loginForm.get('password')?.hasError('required')){
+      <mat-error>Password is <strong>required</strong></mat-error>
+      }
+
+     @if (loginForm.get('password')?.hasError('minlength')){
+      <mat-error>Password must be at least <strong>6 characters</strong> long.</mat-error>  
+     }
+
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">Login</button>
+  </form>
+  <div>
+    Don't have an account? <a href="/signup"> Register</a>
+  </div>
+</div> --> -->

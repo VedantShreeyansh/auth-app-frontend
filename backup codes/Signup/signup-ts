@@ -1,0 +1,68 @@
+// import { Component } from '@angular/core';
+// import { FormGroup, FormControl, Validators, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
+// import { MatSnackBar } from '@angular/material/snack-bar';
+// import { HttpClient } from '@angular/common/http';
+// import { Router } from '@angular/router';
+// import { MatButtonModule } from '@angular/material/button';
+// import { MatInputModule } from '@angular/material/input';
+// import { MatFormFieldModule } from '@angular/material/form-field';
+// import { MatSelectModule } from '@angular/material/select';
+
+// @Component({
+//   selector: 'app-signup',
+//   standalone: true,
+//   imports: [
+//     ReactiveFormsModule,
+//     MatFormFieldModule,
+//     MatInputModule,
+//     MatButtonModule,
+//     MatSelectModule
+//   ],
+//   templateUrl: './signup.component.html',
+//   styleUrls: ['./signup.component.css']
+// })
+// export class SignupComponent {
+//   signupForm: FormGroup;
+//   passwordMatcher: ValidatorFn | ValidatorFn[] | null | undefined;
+
+//   constructor(
+//     private router: Router,
+//     private snackBar: MatSnackBar,
+//     private http: HttpClient
+//   ) {
+//     this.signupForm = new FormGroup({
+//       firstName: new FormControl('', [Validators.required, Validators.minLength(3)]),
+//       lastName: new FormControl('', [Validators.required, Validators.minLength(3)]),
+//       email: new FormControl('', [Validators.required, Validators.email]),
+//       password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+//       confirmPassword: new FormControl('', [Validators.required]), // Add confirmPassword control
+//       role: new FormControl('user') // Default role set to User
+//     }, { validators: this.passwordMatcher }); // Add custom validator for password match
+//   }
+
+//   // Custom validator to check if passwords match
+//   passwordMatchValidator(form: FormGroup) {
+//     return form.get('password')?.value === form.get('confirmPassword')?.value
+//       ? null : { mismatch: true };
+//   }
+
+//   onSubmit() {
+//     if (this.signupForm.invalid) {
+//       return; // Stop if the form is invalid
+//     }
+
+//     const signupData = this.signupForm.value;
+//     const signupEndpoint = "http://localhost:5114/api/Auth/register"; // Ensure this matches your backend endpoint
+
+//     this.http.post<any>(signupEndpoint, signupData).subscribe({
+//       next: () => {
+//         this.snackBar.open('Registration successful!', 'Close', { duration: 3000 });
+//         this.router.navigate(['/login']); // Redirect to the login page after successful registration
+//       },
+//       error: (err) => {
+//         console.error(err);
+//         this.snackBar.open('Registration failed. Please try again.', 'Close', { duration: 3000 });
+//       }
+//     });
+//   }
+// }

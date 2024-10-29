@@ -1,0 +1,21 @@
+<!-- <div class="wrapper">
+    <div class="container" style="background-color: black; padding:2rem;border-radius:0.2rem">
+        @if(userRole==='admin'){
+        <mat-tab-group class="container font" (selectedTabChange)="onTabChange($event)">
+            <mat-tab label="A"> Welcome to tab A </mat-tab>
+            <mat-tab label="B"> Welcome to tab B </mat-tab>
+            <mat-tab label="C">Welcome to tab C</mat-tab>
+        </mat-tab-group>
+        }
+        @else {
+        <mat-tab-group class="container font" (selectedTabChange)="onTabChange($event)">
+            <mat-tab label="D"> Welcome to tab D</mat-tab>
+            <mat-tab label="E"> Welcome to tab E</mat-tab>
+            <mat-tab label="F">Welcome to tab F</mat-tab>
+        </mat-tab-group>
+        }
+        <button mat-flat-button (click)="logout()">Logout</button>
+
+    </div>
+
+</div> -->

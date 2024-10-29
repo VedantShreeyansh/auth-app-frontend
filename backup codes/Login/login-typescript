@@ -1,0 +1,83 @@
+// import { Component } from '@angular/core';
+// import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+// import { ErrorStateMatcher } from '@angular/material/core';
+// import { MatInputModule } from '@angular/material/input';
+// import { MatFormFieldModule } from '@angular/material/form-field';
+// import { MatSnackBar } from '@angular/material/snack-bar';
+// import { HttpClient, HttpHeaders } from '@angular/common/http';
+// import { Router } from '@angular/router';
+// import { MatButtonModule } from '@angular/material/button';
+
+// // Custom Error State Matcher
+// export class MyErrorStateMatcher implements ErrorStateMatcher {
+//   isErrorState(control: FormControl | null, form: any): boolean {
+//     const isSubmitted = form && form.submitted;
+//     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+//   }
+// }
+
+// @Component({
+//   selector: 'app-login',
+//   standalone: true,
+//   imports: [
+//     ReactiveFormsModule,
+//     MatFormFieldModule,
+//     MatInputModule,
+//     MatButtonModule,
+//   ],
+//   templateUrl: './login.component.html',
+//   styleUrls: ['./login.component.css']
+// })
+// export class LoginComponent {
+//   loginForm = new FormGroup({
+//     email: new FormControl('', [
+//       Validators.required,
+//       Validators.minLength(3),
+//       Validators.email
+//     ]),
+//     password: new FormControl('', [
+//       Validators.required,
+//       Validators.minLength(6)
+//     ])
+//   });
+
+//   matcher = new MyErrorStateMatcher();
+//   loading = false;
+
+//   constructor(
+//     private router: Router,
+//     private snackBar: MatSnackBar,
+//     private http: HttpClient
+//   ) {}
+
+//   onSubmit() {
+//     console.log("Form Submitted"); // Add this line for debugging
+//     if (this.loginForm.invalid) {
+//         console.log("Form is invalid"); // Add this line for debugging
+//         return;
+//     }
+
+//     this.loading = true;
+//     const loginData = {
+//         email: this.loginForm.value.email,
+//         password: this.loginForm.value.password,
+//     };
+
+//     const loginEndpoint = "http://localhost:5114/api/Auth/login"; // Update if needed
+
+//     this.http.post<any>(loginEndpoint, loginData).subscribe({
+//         next: (response) => {
+//             console.log("Login successful", response); // Add this line for debugging
+//             localStorage.setItem('token', response.token); // Store the token in local storage
+//             this.router.navigate(['/user-dashboard']); // Navigate to user dashboard
+//         },
+//         error: (err) => {
+//             console.error("Login failed", err); // Improved error logging
+//             this.loading = false;
+//             this.snackBar.open('Login failed. Please check your credentials.', 'Close', {
+//                 duration: 3000
+//             });
+//         },
+//     });
+//   }
+// }

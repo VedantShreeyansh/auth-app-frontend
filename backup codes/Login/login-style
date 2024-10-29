@@ -1,0 +1,56 @@
+/* Container for the login form
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5f5f5;
+  padding: 1rem;
+}
+.login-container {
+  max-width: 400px; /* Reduced width */
+  /* width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the form horizontally */
+/*} */
+/* Form field styling */
+/* mat-form-field {
+  width: 100%; Ensure form fields take up full width */
+  /* margin-bottom: 16px;
+}
+/* Button styling */
+/* button {
+  width: 100%; /* Ensure button takes up full width */
+  /* padding: 10px;
+  font-size: 16px;
+} */ 
+/* Error message styling */
+/* mat-error {
+  font-size: 12px;
+  color: red;
+} */
+/* Registration link styling */
+/* .register-link {
+  color: #007bff; /* Change to your preferred color */
+  /* text-decoration: none;
+  font-weight: bold; */
+/* } */ 
+/* .register-link:hover {
+  text-decoration: underline;
+}
+/* Responsive design */
+/* @media (max-width: 600px) {
+  .login-container {
+    padding: 10px;
+  }
+  button {
+    font-size: 14px;
+  } */
+/* } */ 
