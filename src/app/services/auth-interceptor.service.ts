@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { catchError, tap } from 'rxjs/operators';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
@@ -9,26 +10,27 @@ export class AuthInterceptorService implements HttpInterceptor {
   constructor(private snackBar: MatSnackBar) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return new Observable<HttpEvent<any>>(observer => {
-      next.handle(req).subscribe({
-        next: (event: HttpEvent<any>) => {
-          observer.next(event);
-          if (event instanceof HttpResponse) {
-            if (event.body && event.body.message === 'Registration Successful') {
-              this.snackBar.open('Registration successful', 'Close', { duration: 3000 });
-            }
+    // Add token to headers if available
+    const token = localStorage.getItem('jwtToken');
+    const authReq = token ? req.clone({ headers: req.headers.set('Authorization', `Bearer ${token}`) }) : req;
+
+    return next.handle(authReq).pipe(
+      tap((event: HttpEvent<any>) => {
+        if (event instanceof HttpResponse) {
+          if (event.body?.message === 'Registration Successful') {
+            this.snackBar.open('Registration successful', 'Close', { duration: 3000 });
           }
-        },
-        error: (error: HttpErrorResponse) => {
-          observer.error(error); // Emit the error
-          if (error.status === 400 && error.error && error.error.message) {
-            this.snackBar.open(`Registration failed: ${error.error.message}`, 'Close', { duration: 3000 });
-          } else {
-            this.snackBar.open('An error occurred. Please try again.', 'Close', { duration: 3000 });
-          }
-        },
-        complete: () => observer.complete() // Complete the observable
-      });
-    });
+        }
+      }),
+      catchError((error: HttpErrorResponse) => {
+        // Display a snack bar based on the error type
+        if (error.status === 400 && error.error?.message) {
+          this.snackBar.open(`Registration failed: ${error.error.message}`, 'Close', { duration: 3000 });
+        } else {
+          this.snackBar.open('An error occurred. Please try again.', 'Close', { duration: 3000 });
+        }
+        return throwError(error); // Return the error to the caller
+      })
+    );
   }
 }

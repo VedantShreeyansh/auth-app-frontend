@@ -7,7 +7,6 @@ import { CommonModule } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 
-
 @Component({
   selector: 'app-noticeboard',
   standalone: true,
@@ -39,17 +38,21 @@ export class NoticeboardComponent implements OnInit {
   }
 
   fetchMessages(): void {
-    this.noticeboardService.getMessages().subscribe((data: any[]) => {
-      this.messages = data;
+    this.noticeboardService.getMessages().subscribe({
+      next: (data: any[]) => this.messages = data,
+      error: (error) => console.error('Failed to load messages:', error)
     });
   }
 
   sendMessage(): void {
     if (this.noticeForm.valid) {
       const messageData = this.noticeForm.value;
-      this.noticeboardService.sendMessage(messageData).subscribe(() => {
-        this.fetchMessages(); // Refresh messages after sending
-        this.noticeForm.reset();
+      this.noticeboardService.sendMessage(messageData).subscribe({
+        next: () => {
+          this.fetchMessages(); // Refresh messages after sending
+          this.noticeForm.reset();
+        },
+        error: (error) => console.error('Error sending message:', error)
       });
     }
   }
