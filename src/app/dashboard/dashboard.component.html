@@ -13,14 +13,14 @@
         <mat-tab label="F"> Welcome to tab F </mat-tab>
     </mat-tab-group>
     }
-    <a mat-flat-button color="primary" href="/noticeboard">Go to Noticeboard</a>
+    <button mat-flat-button color="primary" (click)="goToNoticeBoard()">Go to Noticeboard</button>
     <button mat-flat-button (click)="logout()">Logout</button>
   </div>
 </div>
 
 
 
-<!-- <div class="wrapper">
+<!-- <d class="wrapper">
     <div class="container" style="background-color: black; padding:2rem;border-radius:0.2rem">
         @if(userRole==='admin'){
         <mat-tab-group class="container font" (selectedTabChange)="onTabChange($event)">
@@ -41,5 +41,4 @@
         <button mat-flat-button (click)="logout()">Logout</button>
 
     </div>
-
 </div> -->

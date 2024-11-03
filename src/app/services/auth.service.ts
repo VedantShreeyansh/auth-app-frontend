@@ -6,61 +6,51 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  signup(firstName: any, lastName: any, email: any, password: any, role: any) {
-    throw new Error('Method not implemented.');
-  }
-  validateSessionToken(sessionToken: string) {
-    throw new Error('Method not implemented.');
-  }
-  logoutUser() {
-    throw new Error('Method not implemented.');
-  }
-
-  private apiUrl = 'http://localhost:5114'; // Replace with your CouchDB URL
+ private apiUrl = 'http://localhost:5114'; // Replace with your backend URL
 
   constructor(private http: HttpClient) { }
 
-  // Mock method to check if the user is logged in
-  isLoggedIn(): boolean {
-    return !!localStorage.getItem('authToken');
-  }
-
-  // Mock method to log in the user
-  login(token: string): void {
-    localStorage.setItem('authToken', token);
-  }
-
-  // Mock method to log out the user
-  logout(): void {
-    localStorage.removeItem('authToken');
+  // Method to log in the user
+  login(loginData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/api/Auth/login`, loginData);
   }
 
   // Method to register a new user
   register(user: any): Observable<any> {
-    var credentials = {
-        "firstName": user.firstName,
-        "lastName": user.lastName,
-        "password": user.password,
-        "email": user.email,
-        "role": user.adminOrUser,
-        "isApproved": false
-    }
-    console.log(credentials);
+    const credentials = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      password: user.password,
+      role: user.role,
+      isApproved: false
+    };
     return this.http.post(`${this.apiUrl}/api/Auth/register`, credentials);
   }
 
+  // Method to store the token in local storage
+  storeToken(token: string): void {
+    localStorage.setItem('authToken', token);
+  }
 
-  // Method to retrieve user information by email
-  // getUserByEmail(email: string): Observable<any> {
-  //   // const url = `${this.apiUrl}/users/_find`;
-  //   // const query = {
-  //   //   selector: {
-  //   //     email: email
-  //   //   }
-  //   // };
-  //   // return this.http.post(url, query);
-  // }
-  getUserByEmail(email: string){
-    console.log(email);
+  // Method to check if the user is logged in
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('authToken');
+  }
+
+  // Method to log out the user and remove the token
+  logout(): void {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('sessionId');
+  }
+
+  //Method to store session ID in local storage
+  storeSessionId(sessionId: string): void {
+    localStorage.setItem('sessionId', sessionId);
+  }
+
+  //Method to get session ID from local storage
+  getSesssionId(): string | null {
+    return localStorage.getItem('sessionId');
   }
 }

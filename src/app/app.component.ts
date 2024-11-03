@@ -14,7 +14,7 @@ import { NoticeboardComponent } from './noticeboard/noticeboard.component';
 export class AppComponent implements OnInit {
   title = 'auth-app';
   ngOnInit(): void {
-    console.log("Initailized");
+    console.log("Initialized");
   }
   
   @HostListener('window:beforeunload', ['$event'])

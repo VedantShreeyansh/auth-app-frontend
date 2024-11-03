@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -12,7 +12,7 @@ import { TimeoutService } from '../services/timeout.service';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   timeoutId: any;
   userRole: string | null = null;
 
@@ -24,23 +24,42 @@ export class DashboardComponent implements OnInit {
     this.userRole = localStorage.getItem('role');
   }
 
-  ngOnDestroy(){
+  @HostListener('window:beforeunload', ['$event'])
+  clearSessionId(event: Event): void {
+    localStorage.removeItem('sessionId');
+  }
+
+  ngOnDestroy(): void {
     this.timeoutService.clearTimeout();
   }
 
   ngOnInit(): void {
+    console.log(localStorage.getItem("authToken"));
+
     this.userRole = localStorage.getItem('role');
+    if (!this.getSessionId()) {
+      this.logout();
+    }
     if (this.userRole === 'admin'){
       this.onTabChange({
         tab:{
           textLabel: 'A'
         }
-      })
+      });
     }
     console.log('User Role in Dashboard:', this.userRole);
   }
 
-  onTabChange(event: any) {
+  getSessionId(): string | null {
+    return localStorage.getItem('sessionId');
+  }
+
+  goToNoticeBoard(): void {
+    console.log("navigating");
+    this.router.navigate(['/noticeboard']);
+  }
+
+  onTabChange(event: any): void {
     const selectedTabLabel = event.tab.textLabel;
 
     if (this.userRole === 'admin' && selectedTabLabel === 'A') {

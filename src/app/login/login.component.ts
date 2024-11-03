@@ -1,16 +1,21 @@
-import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { ErrorStateMatcher } from '@angular/material/core';
-import { MatInputModule } from '@angular/material/input';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Router, RouterModule } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { CommonModule } from '@angular/common';
+import { ErrorStateMatcher } from '@angular/material/core';
+import { FormControl, FormGroupDirective, NgForm } from '@angular/forms';
+import { AuthService } from '../services/auth.service';
 
-// Custom Error State Matcher
 export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null, form: any): boolean {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
   }
@@ -20,85 +25,103 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   selector: 'app-login',
   standalone: true,
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatIconModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatSnackBarModule,
+    RouterModule
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
-  loginForm = new FormGroup({
-    email: new FormControl('', [
-      Validators.required,
-      Validators.minLength(3),
-      Validators.email
-    ]),
-    password: new FormControl('', [
-      Validators.required,
-      Validators.minLength(6),
-      Validators.email
-    ])
-  });
-
-  matcher = new MyErrorStateMatcher();
-  loading = false;
+export class LoginComponent implements OnInit {
+  loginForm: FormGroup;
   errorMessage: string | null = null;
+  matcher = new MyErrorStateMatcher();
+  loading = false; // Add the loading property
 
   constructor(
-    private router: Router,
+    private fb: FormBuilder,
+    private http: HttpClient,
     private snackBar: MatSnackBar,
-    private http: HttpClient
-  ) {}
+    private router: Router,
+    private authService: AuthService
+  ) {
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]]
+    });
+  }
 
-  onSubmit() {
-    // if (this.loginForm.invalid) {
-    //     return;
-    // }
+  ngOnInit(): void {}
 
-    this.loading = true;
-    const loginData = {
+  onSubmit(): void {
+
+     console.log("Initializing the submit function");
+     console.log(this.loginForm.value.email);
+     console.log(this.loginForm.value.password);
+     console.log(this.loginForm.valid);
+
+
+
+    if (this.loginForm.valid) {
+      this.loading = true; // Set loading to true when the form is submitted
+      const loginData = {
         email: this.loginForm.value.email,
         password: this.loginForm.value.password,
-    };
+      };
 
-    const loginEndpoint = "http://localhost:5114/api/Auth/login";
+      // check if the user is already logged in from another window
+      if (this.authService.getSesssionId()) {
+        this.errorMessage = 'You are already logged in from another window.';
+        this.snackBar.open(this.errorMessage, 'Close', { duration: 3000 });
+        this.loading = false;
+        return;
+      }
 
-    this.http.post<any>(loginEndpoint, loginData).subscribe({
+      this.authService.login(loginData).subscribe({
         next: (response) => {
-            if (localStorage.getItem('token')) {
-                this.loading = false;
-                this.errorMessage = "You have already logged in another window or tab";
-                return;
-            }
-            else {
-                localStorage.setItem('token', response.token); // Store the token in local storage
-                localStorage.setItem('role', response?.user?.role);
-            }
-            
-            // Determine user role and redirect based on it
-            console.log(response);
+          if (!response.token || !response.user?.role) {
+            this.errorMessage = 'Invalid login response.';
+            this.loading = false; // Set loading to false if the response is invalid
+            return;
+          }
 
-            const userRole = localStorage.getItem('role'); // Assume 'role' is part of the response
+          this.authService.storeToken(response.token); // Store the token in local storage
+          localStorage.setItem('role', response.user.role);
 
-            if (userRole?.toLowerCase() === 'admin') {
-                this.router.navigate(['/dashboard']); // Admin dashboard route
-            } else if (userRole?.toLowerCase() === 'user') {
-                this.router.navigate(['/dashboard']); // User dashboard route
-            } else {
-                this.errorMessage = 'Invalid role detected.';
-            }
+           // Generate a unique session ID and store it in local storage
+           const sessionId = new Date().getTime().toString();
+           this.authService.storeSessionId(sessionId);
+ 
+          // Determine user role and redirect based on it
+          console.log(response);
 
-            this.loading = false;
+          const userRole = localStorage.getItem('role'); // Assume 'role' is part of the response
+
+          if (userRole?.toLowerCase() === 'admin') {
+            this.router.navigate(['/dashboard']); // Admin dashboard route
+          } else if (userRole?.toLowerCase() === 'user') {
+            console.log("navigating");
+            this.router.navigate(['/dashboard']); // User dashboard route
+          } else {
+            this.errorMessage = 'Invalid role detected.';
+          }
+
+          this.loading = false; // Set loading to false after processing the response
         },
         error: (err) => {
-            console.error("Login failed", err); // Log the error for debugging
-            this.loading = false;
-            this.snackBar.open('Login failed. Please check your credentials.', 'Close', {
-                duration: 3000
-            });
-        },
-    });
+          console.error('Login error:', err);
+          this.errorMessage = 'Login failed. Please try again.';
+          this.snackBar.open(this.errorMessage, 'Close', { duration: 3000 });
+          this.loading = false; // Set loading to false if there is an error
+        }
+      });
+    }
   }
 }

@@ -4,28 +4,31 @@ import { SignupComponent } from './signup/signup.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthGuard } from './services/auth.guard';
 import { NoticeboardComponent } from './noticeboard/noticeboard.component';
-
+import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 
 export const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
-    // canActivate: [AuthGuard],
   },
   {
     path: 'signup',
     component: SignupComponent,
-    // canActivate: [AuthGuard],
   },
   {
     path: 'dashboard',
     component: DashboardComponent,
-     canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: 'noticeboard',
     component: NoticeboardComponent,
-    // canActivate: [AuthGuard],
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'admin-panel',
+    component: AdminPanelComponent,
+     canActivate: [AuthGuard],
   },
   {
     path: '',

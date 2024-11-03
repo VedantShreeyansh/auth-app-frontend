@@ -1,0 +1,55 @@
+/* Container for the admin panel */
+:host {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f5f5; 
+    padding: 1rem;
+  }
+  
+  .admin-panel-container {
+    max-width: 600px; 
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .registration-requests {
+    margin-bottom: 1rem;
+  }
+  
+  .registration-requests p {
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background-color: #e0f7fa;
+    border-radius: 4px;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  mat-form-field {
+    margin-bottom: 1rem;
+  }
+  
+  button {
+    align-self: flex-end;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 600px) {
+    .admin-panel-container {
+      padding: 10px;
+    }
+  
+    button {
+      font-size: 14px;
+    }
+  }
