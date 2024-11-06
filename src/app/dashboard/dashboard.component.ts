@@ -78,7 +78,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   logout(): void {
     console.log('logout clicked');
-    localStorage.clear();
-    this.router.navigate(['/login']);
+    localStorage.clear(); // Clear local storage, including sessionId and JWT token
+    this.router.navigate(['/login']); // Navigate to login page
   }
 }

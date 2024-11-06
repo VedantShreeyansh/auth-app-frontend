@@ -4,6 +4,7 @@ import { SignupComponent } from './signup/signup.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthGuard } from './services/auth.guard';
 import { NoticeboardComponent } from './noticeboard/noticeboard.component';
+import { PendingApprovalComponent } from './pending-approval/pending-approval.component';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 
 export const routes: Routes = [
@@ -30,6 +31,9 @@ export const routes: Routes = [
     component: AdminPanelComponent,
      canActivate: [AuthGuard],
   },
+  { path: 'pending-approval',
+   component: PendingApprovalComponent,
+   },
   {
     path: '',
     redirectTo: '/login',

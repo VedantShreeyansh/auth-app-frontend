@@ -1,15 +1,14 @@
 <div class="admin-panel-container">
-    <h2>Admin Panel - User Registration Requests</h2>
-    <div class="registration-requests">
-      <div *ngFor="let request of registrationRequests">
-        <p><strong>{{ request.firstName }} {{ request.lastName }}</strong> ({{ request.email }})</p>
-        <form [formGroup]="approvalForm" (ngSubmit)="approveUser()">
-          <input type="hidden" formControlName="userId" [value]="request.id">
-          <mat-checkbox formControlName="isApproved">Approve</mat-checkbox>
-          <button mat-raised-button color="primary" type="submit">Submit</button>
-        </form>
-        <hr>
-      </div>
+  <h2>Admin Panel - User Registration Requests</h2>
+  <div class="registration-requests">
+    <div *ngFor="let request of registrationRequests">
+      <p><strong>{{ request.firstName }} {{ request.lastName }}</strong> ({{ request.email }})</p>
+      <form [formGroup]="request.form" (ngSubmit)="approveUser(request)">
+        <mat-checkbox formControlName="isApproved">Approve</mat-checkbox>
+        <button mat-raised-button color="primary" type="submit">Submit</button>
+        <button mat-raised-button color="warn" type="button"  (click)="rejectUser(request.id)">Reject</button>
+      </form>
+      <hr>
     </div>
+  </div>
 </div>
-  

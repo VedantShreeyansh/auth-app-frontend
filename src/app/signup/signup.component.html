@@ -42,7 +42,7 @@
       </mat-select>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit" [disabled]="signupForm.invalid">Register</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="signupForm.invalid" ng-click="onSubmit()">Register</button>
     <p>Already have an account? <a routerLink="/login">Login</a></p>
   </form>
 </div>

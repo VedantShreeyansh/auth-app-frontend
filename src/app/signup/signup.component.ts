@@ -72,21 +72,28 @@ export class SignupComponent implements OnInit {
       email: this.signupForm.value.email,
       password: this.signupForm.value.password,
       role: this.signupForm.value.role,
-      status: "pending"
+      status: "Pending"
     };
 
     console.log('Signup Data:', signupData); // Add log to inspect the form data
 
-    const signupEndpoint = "http://localhost:5114/api/Auth/register"; // Ensure this matches your backend endpoint
+    const signupEndpoint = "http://localhost:5114/api/Auth/register";
 
-    this.http.post<any>(signupEndpoint, signupData).subscribe({
-      next: () => {
-        this.snackBar.open('Registration successful!', 'Close', { duration: 3000 });
+    this.http.post<any>(signupEndpoint, signupData, {
+      headers: {
+        'Content-Type': 'application/json' // Set content type to JSON
+      }
+    }).subscribe({
+      next: (response) => {
+        // Access response.message to display the success message
+        this.snackBar.open(response.message || 'Registration successful!', 'Close', { duration: 3000 });
         this.router.navigate(['/login']); // Redirect to the login page after successful registration
       },
       error: (err) => {
-        console.error('Registration error:', err); // Add log to inspect the error
-        this.snackBar.open('Registration failed. Please try again.', 'Close', { duration: 3000 });
+        // Access err.error?.message if there's an error message in the response
+        const errorMessage = err.error?.message || 'Registration failed. Please try again.';
+        console.error('Registration error:', err); // Log the error to inspect it
+        this.snackBar.open(errorMessage, 'Close', { duration: 3000 });
       }
     });
   }

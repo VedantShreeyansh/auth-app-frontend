@@ -10,26 +10,22 @@ export class AuthInterceptorService implements HttpInterceptor {
   constructor(private snackBar: MatSnackBar) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // Add token to headers if available
-    const token = localStorage.getItem('jwtToken');
+    const token = localStorage.getItem('authToken'); // Ensure the key matches what's in AuthService
     const authReq = token ? req.clone({ headers: req.headers.set('Authorization', `Bearer ${token}`) }) : req;
 
     return next.handle(authReq).pipe(
       tap((event: HttpEvent<any>) => {
-        if (event instanceof HttpResponse) {
-          if (event.body?.message === 'Registration Successful') {
-            this.snackBar.open('Registration successful', 'Close', { duration: 3000 });
-          }
+        if (event instanceof HttpResponse && event.body?.message === 'Registration Successful') {
+          this.snackBar.open('Registration successful', 'Close', { duration: 3000 });
         }
       }),
       catchError((error: HttpErrorResponse) => {
-        // Display a snack bar based on the error type
-        if (error.status === 400 && error.error?.message) {
-          this.snackBar.open(`Registration failed: ${error.error.message}`, 'Close', { duration: 3000 });
+        if (error.status === 401) {
+          this.snackBar.open('Unauthorized access. Please log in again.', 'Close', { duration: 3000 });
         } else {
           this.snackBar.open('An error occurred. Please try again.', 'Close', { duration: 3000 });
         }
-        return throwError(error); // Return the error to the caller
+        return throwError(error);
       })
     );
   }
