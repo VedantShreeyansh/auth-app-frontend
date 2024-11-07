@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -10,28 +11,34 @@ import { catchError, tap } from 'rxjs/operators';
 export class AuthService {
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,  private router: Router) { }
 
   // Login method
   login(loginData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/api/Auth/login`, loginData).pipe(
       tap((response: any) => {
+        console.log('Login Response:', response); 
         if (response.token) {
           this.storeToken(response.token);
-
-          const userId = response.user?.id;
+  
+          const userId = response.user?._id || response.user?.id;  // Change from response.user?.id to response.user?._id
           if (userId) {
             this.getUserById(userId).subscribe(user => {
               localStorage.setItem('userRole', user.role.toLowerCase());
+              localStorage.setItem('userStatus', user.status);
+
+               // Generate and store session ID
+               const sessionId = new Date().getTime().toString();
+               this.storeSessionId(sessionId);
             });
           }
         }
       }),
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401 && error.error?.message === "User is not approved for login.") {
-          return throwError("User is not approved for login.");
+          return throwError(() => new Error("User is not approved for login."))
         }
-        return throwError(error);
+        return throwError(() => new Error(error.message))
       })
     );
   }
@@ -64,6 +71,7 @@ export class AuthService {
     localStorage.removeItem('authToken');
     localStorage.removeItem('sessionId');
     localStorage.removeItem('userRole');
+    localStorage.removeItem('userStatus');
   }
 
   // Store session ID in local storage
@@ -86,8 +94,8 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/api/User/approve`, { userId, status: isApproved ? 'Approved' : 'Rejected' });
   }
 
-  // Fetch user by ID
+  // Fetch user by ID (make sure it works with _id)
   getUserById(userId: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/api/User/${userId}`);
+    return this.http.get(`${this.apiUrl}/api/User/${userId}`);  // Ensure userId is the _id (UUID)
   }
 }

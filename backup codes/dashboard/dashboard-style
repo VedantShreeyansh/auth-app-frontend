@@ -4,3 +4,27 @@
     color: white; 
   }
    */
+
+
+   /* .wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .container {
+    background-color: transparent;
+    padding: 2rem;
+    border-radius: 0.2rem;
+  }
+  
+  .font {
+    font-weight: bold; 
+    text-transform: uppercase;
+    color: white; 
+  }
+  
+  button {
+    margin-top: 1rem;
+  } */

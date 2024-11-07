@@ -13,6 +13,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
+import { v4 as uuidv4 } from 'uuid'; // Import uuid to generate unique IDs
 
 @Component({
   selector: 'app-signup',
@@ -66,33 +67,38 @@ export class SignupComponent implements OnInit {
       return; // Stop if the form is invalid
     }
 
+    // Create the signup data including the _id and Id fields
     const signupData = {
+      _id: uuidv4(), // Generate a unique ID for _id
+      _rev: "", // Placeholder for the _rev field (empty for new documents)
+      Id: uuidv4(), // Generate a unique ID for Id (or use another method to generate it)
       firstName: this.signupForm.value.firstName,
       lastName: this.signupForm.value.lastName,
       email: this.signupForm.value.email,
       password: this.signupForm.value.password,
       role: this.signupForm.value.role,
-      status: "Pending"
+      status: "Pending" // Default status to 'Pending'
     };
 
     console.log('Signup Data:', signupData); // Add log to inspect the form data
 
     const signupEndpoint = "http://localhost:5114/api/Auth/register";
 
+    // Send the signup data to the backend
     this.http.post<any>(signupEndpoint, signupData, {
       headers: {
         'Content-Type': 'application/json' // Set content type to JSON
       }
     }).subscribe({
       next: (response) => {
-        // Access response.message to display the success message
+        // Check for response.message and display success message
         this.snackBar.open(response.message || 'Registration successful!', 'Close', { duration: 3000 });
         this.router.navigate(['/login']); // Redirect to the login page after successful registration
       },
       error: (err) => {
-        // Access err.error?.message if there's an error message in the response
+        // Handle errors and show an appropriate error message
         const errorMessage = err.error?.message || 'Registration failed. Please try again.';
-        console.error('Registration error:', err); // Log the error to inspect it
+        console.error('Registration error:', err); // Log the error for debugging
         this.snackBar.open(errorMessage, 'Close', { duration: 3000 });
       }
     });

@@ -20,4 +20,9 @@ export class UserService {
   approveUser(approvalData: any): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/approve`, approvalData);
   }
+
+  // Fetch user by ID
+   getUserById(userId: string): Observable<any> {
+  return this.http.get(`${this.baseUrl}/${userId}`);  // Ensure userId is the _id (UUID)
+   }
 }

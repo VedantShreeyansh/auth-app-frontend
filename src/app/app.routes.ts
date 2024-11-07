@@ -3,6 +3,7 @@ import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthGuard } from './services/auth.guard';
+import { AuthService } from './services/auth.service';
 import { NoticeboardComponent } from './noticeboard/noticeboard.component';
 import { PendingApprovalComponent } from './pending-approval/pending-approval.component';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
@@ -19,10 +20,10 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: DashboardComponent,
-    canActivate: [AuthGuard],
+     canActivate: [AuthGuard],
   },
   {
-    path: 'noticeboard',
+    path: 'noticeBoard',
     component: NoticeboardComponent,
     canActivate: [AuthGuard],
   },

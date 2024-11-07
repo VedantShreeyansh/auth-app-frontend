@@ -64,46 +64,46 @@ export class LoginComponent implements OnInit {
     console.log(this.loginForm.value.email);
     console.log(this.loginForm.value.password);
     console.log(this.loginForm.valid);
-  
+
     if (this.loginForm.valid) {
-      this.loading = true; // Set loading to true on form submission
+      this.loading = true;
       const loginData = {
         email: this.loginForm.value.email,
         password: this.loginForm.value.password,
       };
 
-      console.log('Login data:', loginData);
-  
-      // Check if user is already logged in from another window
+      // Check if the user is already logged in from another window
       if (this.authService.getSessionId()) {
         this.errorMessage = 'You are already logged in from another window.';
         this.snackBar.open(this.errorMessage, 'Close', { duration: 3000 });
         this.loading = false;
         return;
       }
-  
+
       this.authService.login(loginData).subscribe({
         next: (response) => {
-          // Validate response and store token if successful
-          if (!response.token || !response.user?.role || !response.user?.status) {
+          // Ensure response includes _id (UUID), role, and status
+          if (!response.token || !response.user?._id || !response.user?.role || !response.user?.status) {
+            console.log('Response:', response);
             this.errorMessage = 'Invalid login response.';
             this.snackBar.open(this.errorMessage, 'Close', { duration: 3000 });
             this.loading = false;
             return;
           }
-  
-          // Store token and role
+
+          // Store token and session ID
           this.authService.storeToken(response.token);
           const sessionId = new Date().getTime().toString();
-          this.authService.storeSessionId(sessionId); // Generate and store session ID
+          this.authService.storeSessionId(sessionId);
+
           const userRole = response.user.role.toLowerCase();
-          const userStatus = response.user.status; // 'Approved', 'Pending', etc.
-  
+          const userStatus = response.user.status;
+
           // Role-based redirection based on status
           if (userRole === 'admin' && userStatus === 'Approved') {
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/admin-dashboard']);
           } else if (userRole === 'user' && userStatus === 'Approved') {
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/user-dashboard']);
           } else {
             this.errorMessage = 'User is not approved for login.';
             this.snackBar.open(this.errorMessage, 'Close', { duration: 3000 });
@@ -112,12 +112,12 @@ export class LoginComponent implements OnInit {
           this.loading = false;
         },
         error: (err) => {
-          console.error('Login error:', err);
-          this.errorMessage = err.error.message || 'Login failed. Please try again.'; // Display backend error if available
+          console.error('Login Error:', err); 
+          this.errorMessage = err.error.message || 'Login failed. Please try again.';
           this.snackBar.open(this.errorMessage, 'Close', { duration: 3000 });
           this.loading = false;
         }
       });
     }
-  }  
+  }
 }
