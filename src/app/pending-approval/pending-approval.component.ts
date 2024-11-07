@@ -20,6 +20,5 @@ export class PendingApprovalComponent {
   @HostListener('window:popstate', ['$event'])
   onPopState(event: Event): void {
     localStorage.clear();
-    this.router.navigate(['/login']);
   }
 }

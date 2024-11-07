@@ -63,6 +63,7 @@
     localStorage.removeItem('authToken');
     localStorage.removeItem('sessionId');
     localStorage.removeItem('userRole');
+    localStorage.removeItem('userStatus');
     this.router.navigate(['/login']);
    }
 

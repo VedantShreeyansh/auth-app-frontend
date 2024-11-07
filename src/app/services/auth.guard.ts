@@ -16,17 +16,13 @@ export class AuthGuard implements CanActivate {
 
 
     if (token) {
+      console.log("token achieved");
+      console.log(token, userRole, userStatus);
       if (userStatus === 'Approved') {
-        if (userRole === 'admin' || userRole === 'user') {
           // Navigate to dashboard based on role and approved status
-          this.router.navigate(['/dashboard']);
           return true; // Authorized and navigate to dashboard
-        }
-      } else {
-        // Redirect to pending approval page if the user is not approved
-        this.router.navigate(['/pending-approval']);
-        return false;
       }
+      return false; 
     } else {
       // Redirect to login page if there's no token
       this.router.navigate(['/login']);

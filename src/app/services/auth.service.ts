@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { Observable, throwError, of, switchMap } from 'rxjs';
+import { catchError, mergeMap, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -16,29 +16,31 @@ export class AuthService {
   // Login method
   login(loginData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/api/Auth/login`, loginData).pipe(
-      tap((response: any) => {
-        console.log('Login Response:', response); 
+      switchMap((response: any) => {
+        console.log('Login Response:', response);
         if (response.token) {
           this.storeToken(response.token);
   
-          const userId = response.user?._id || response.user?.id;  // Change from response.user?.id to response.user?._id
+          const userId = response.user?.id; 
           if (userId) {
-            this.getUserById(userId).subscribe(user => {
-              localStorage.setItem('userRole', user.role.toLowerCase());
-              localStorage.setItem('userStatus', user.status);
-
-               // Generate and store session ID
-               const sessionId = new Date().getTime().toString();
-               this.storeSessionId(sessionId);
-            });
+            return this.getUserById(userId).pipe(
+              tap(user => {
+                localStorage.setItem('userRole', user.role.toLowerCase());
+                localStorage.setItem('userStatus', user.status);
+  
+                const sessionId = new Date().getTime().toString();
+                this.storeSessionId(sessionId);
+              })
+            );
           }
         }
+        return of(response); 
       }),
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401 && error.error?.message === "User is not approved for login.") {
-          return throwError(() => new Error("User is not approved for login."))
+          return throwError(() => new Error("User is not approved for login."));
         }
-        return throwError(() => new Error(error.message))
+        return throwError(() => new Error(error.message));
       })
     );
   }

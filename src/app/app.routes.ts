@@ -34,6 +34,7 @@ export const routes: Routes = [
   },
   { path: 'pending-approval',
    component: PendingApprovalComponent,
+   // canActivate: [AuthGuard],
    },
   {
     path: '',

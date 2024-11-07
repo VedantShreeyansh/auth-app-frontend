@@ -83,29 +83,35 @@ export class LoginComponent implements OnInit {
       this.authService.login(loginData).subscribe({
         next: (response) => {
           // Ensure response includes _id (UUID), role, and status
-          if (!response.token || !response.user?._id || !response.user?.role || !response.user?.status) {
-            console.log('Response:', response);
+          console.log('Response:', response);
+          if (!response._id || !response.role || !response.status) {
             this.errorMessage = 'Invalid login response.';
             this.snackBar.open(this.errorMessage, 'Close', { duration: 3000 });
             this.loading = false;
             return;
           }
 
+         
           // Store token and session ID
-          this.authService.storeToken(response.token);
-          const sessionId = new Date().getTime().toString();
-          this.authService.storeSessionId(sessionId);
+        //  this.authService.storeToken(response.token);
+        //  const sessionId = new Date().getTime().toString();
+        //  this.authService.storeSessionId(sessionId);
 
-          const userRole = response.user.role.toLowerCase();
-          const userStatus = response.user.status;
+          const userRole = response?.role.toLowerCase();
+          const userStatus = response?.status;
+
+          console.log('userRole:', userRole);
+          console.log('userStatus:', userStatus)
 
           // Role-based redirection based on status
           if (userRole === 'admin' && userStatus === 'Approved') {
-            this.router.navigate(['/admin-dashboard']);
+            console.log("navigating to the dashboard");
+            this.router.navigate(['/dashboard']);
           } else if (userRole === 'user' && userStatus === 'Approved') {
-            this.router.navigate(['/user-dashboard']);
+            this.router.navigate(['/dashboard']);
           } else {
             this.errorMessage = 'User is not approved for login.';
+            this.router.navigate(['/pending-approval']);
             this.snackBar.open(this.errorMessage, 'Close', { duration: 3000 });
           }
 
