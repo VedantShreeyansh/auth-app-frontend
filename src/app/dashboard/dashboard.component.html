@@ -13,6 +13,9 @@
           <mat-tab label="F"> Welcome to tab F </mat-tab>
       </mat-tab-group>
       }
+      @if (userRole === 'admin'){
+        <button mat-flat-button color="accent" (click)="goToAdminPanel()">Go to Admin Panel</button>
+      }
       <button mat-flat-button color="primary" (click)="goToNoticeBoard()">Go to Noticeboard</button>
       <button mat-flat-button (click)="logout()">Logout</button>
     </div>

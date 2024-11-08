@@ -7,6 +7,9 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class UserService {
+  getRegistrationRequests() {
+    throw new Error('Method not implemented.');
+  }
   private baseUrl = `${environment.apiUrl}/api/users`; // Adjust based on your backend URL
 
   constructor(private http: HttpClient) { }
@@ -16,13 +19,13 @@ export class UserService {
     return this.http.get<any[]>(`${this.baseUrl}/pending`);
   }
 
-  // Approve user registration
-  approveUser(approvalData: any): Observable<any> {
+  // Approve or reject user registration
+  approveUser(approvalData: { userId: string, isApproved: boolean }): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/approve`, approvalData);
   }
 
-  // Fetch user by ID
-   getUserById(userId: string): Observable<any> {
-  return this.http.get(`${this.baseUrl}/${userId}`);  // Ensure userId is the _id (UUID)
-   }
+  // Fetch user by ID (make sure userId is the _id (UUID))
+  getUserById(userId: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/${userId}`);
+  }
 }

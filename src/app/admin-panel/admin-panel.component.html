@@ -1,12 +1,18 @@
 <div class="admin-panel-container">
   <h2>Admin Panel - User Registration Requests</h2>
-  <div class="registration-requests">
+
+  <!-- Check if there are any registration requests -->
+  <div *ngIf="registrationRequests.length === 0">
+    <p>No registration requests available.</p>
+  </div>
+
+  <div *ngIf="registrationRequests.length > 0" class="registration-requests">
     <div *ngFor="let request of registrationRequests">
       <p><strong>{{ request.firstName }} {{ request.lastName }}</strong> ({{ request.email }})</p>
       <form [formGroup]="request.form" (ngSubmit)="approveUser(request)">
         <mat-checkbox formControlName="isApproved">Approve</mat-checkbox>
-        <button mat-raised-button color="primary" type="submit">Submit</button>
-        <button mat-raised-button color="warn" type="button"  (click)="rejectUser(request.id)">Reject</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="!request.form.valid">Submit</button>
+        <button mat-raised-button color="warn" type="button" (click)="rejectUser(request)">Reject</button>
       </form>
       <hr>
     </div>

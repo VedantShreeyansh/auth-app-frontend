@@ -54,6 +54,11 @@
     return localStorage.getItem('sessionId');
   }
 
+  goToAdminPanel(): void{
+    console.log("navigating");
+    this.router.navigate(['/admin-panel']);
+  }
+
   goToNoticeBoard(): void {
     console.log("navigating");
     this.router.navigate(['/noticeBoard']);

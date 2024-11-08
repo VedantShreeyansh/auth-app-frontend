@@ -24,14 +24,22 @@ export class AdminPanelComponent implements OnInit {
   fetchRegistrationRequests(): void {
     this.userService.getPendingUsers().subscribe({
       next: (data: any[]) => {
-        this.registrationRequests = data.map(user => ({
-          ...user,
-          form: this.fb.group({
-            isApproved: [false, Validators.requiredTrue]
-          })
-        }));
+        if (data && data.length > 0) {
+          // Mapping over each user to add a form group for approval
+          this.registrationRequests = data.map(user => ({
+            ...user,
+            form: this.fb.group({
+              isApproved: [false, Validators.requiredTrue]  // Default value and validation
+            })
+          }));
+        } else {
+          this.registrationRequests = [];  // No requests to display
+        }
       },
-      error: (error) => console.error('Failed to load registration requests:', error)
+      error: (error) => {
+        console.error('Failed to load registration requests:', error);
+        this.registrationRequests = [];  // In case of error, we can clear any previous data
+      }
     });
   }
 
@@ -44,12 +52,16 @@ export class AdminPanelComponent implements OnInit {
         },
         error: (error) => console.error('Error approving user:', error)
       });
+    } else if ((!request.form.valid)) {
+      console.log('Form is not valid');
+      return;
     }
+    else null;
   }
 
-  rejectUser(userId: string): void {
-    const approvalData = { userId, isApproved: false }; // Prepare data for rejection
-    this.userService.approveUser(approvalData).subscribe({
+  rejectUser(request: any): void {
+    const rejectionData = { userId: request.id, isApproved: false }; // Prepare data for rejection
+    this.userService.approveUser(rejectionData).subscribe({
       next: () => {
         this.fetchRegistrationRequests(); // Refresh the list after rejection
       },

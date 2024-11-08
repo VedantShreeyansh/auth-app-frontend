@@ -7,6 +7,7 @@ import { AuthService } from './services/auth.service';
 import { NoticeboardComponent } from './noticeboard/noticeboard.component';
 import { PendingApprovalComponent } from './pending-approval/pending-approval.component';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
+import { AdminGuard } from './gaurds/admin.guard';
 
 export const routes: Routes = [
   {
@@ -30,7 +31,8 @@ export const routes: Routes = [
   {
     path: 'admin-panel',
     component: AdminPanelComponent,
-     canActivate: [AuthGuard],
+    canActivate: [AdminGuard],
+    data: { role: 'admin', status: 'Approved' } 
   },
   { path: 'pending-approval',
    component: PendingApprovalComponent,
