@@ -10,7 +10,7 @@ export class UserService {
   getRegistrationRequests() {
     throw new Error('Method not implemented.');
   }
-  private baseUrl = `${environment.apiUrl}/api/users`; // Adjust based on your backend URL
+  private baseUrl = `${environment.apiUrl}/api/user`; // Adjust based on your backend URL
 
   constructor(private http: HttpClient) { }
 

@@ -23,7 +23,7 @@ export class AdminGuard implements CanActivate {
 
         // Check if the user is an admin when accessing the admin panel
         if (this.router.url.includes('admin-panel') && userRole !== 'admin') {
-          this.router.navigate(['/']); // Redirect to home or dashboard if not an admin
+          this.router.navigate(['/dashboard']); // Redirect to home or dashboard if not an admin
           return false;
         }
 

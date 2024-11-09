@@ -68,17 +68,17 @@ export class SignupComponent implements OnInit {
     }
 
     // Create the signup data including the _id and Id fields
+    // Simplified Signup Data without Id
     const signupData = {
-      _id: uuidv4(), // Generate a unique ID for _id
-      _rev: "", // Placeholder for the _rev field (empty for new documents)
-      Id: uuidv4(), // Generate a unique ID for Id (or use another method to generate it)
-      firstName: this.signupForm.value.firstName,
-      lastName: this.signupForm.value.lastName,
-      email: this.signupForm.value.email,
-      password: this.signupForm.value.password,
-      role: this.signupForm.value.role,
-      status: "Pending" // Default status to 'Pending'
+  //  _id: uuidv4(),
+    firstName: this.signupForm.value.firstName,
+    lastName: this.signupForm.value.lastName,
+    email: this.signupForm.value.email,
+    password: this.signupForm.value.password,
+    role: this.signupForm.value.role,
+    status: "Pending" // Default status to 'Pending'
     };
+
 
     console.log('Signup Data:', signupData); // Add log to inspect the form data
 

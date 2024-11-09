@@ -8,6 +8,7 @@ import { NoticeboardComponent } from './noticeboard/noticeboard.component';
 import { PendingApprovalComponent } from './pending-approval/pending-approval.component';
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 import { AdminGuard } from './gaurds/admin.guard';
+import { UserService } from './services/user.service';
 
 export const routes: Routes = [
   {
