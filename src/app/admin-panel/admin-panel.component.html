@@ -2,12 +2,12 @@
   <h2>Admin Panel - User Registration Requests</h2>
 
   <!-- Check if there are any registration requests -->
-  <div *ngIf="registrationRequests.length === 0">
+  <div *ngIf="pendingUsers.length === 0">
     <p>No registration requests available.</p>
   </div>
 
-  <div *ngIf="registrationRequests.length > 0" class="registration-requests">
-    <div *ngFor="let request of registrationRequests">
+  <div *ngIf="pendingUsers.length > 0" class="registration-requests">
+    <div *ngFor="let request of pendingUsers">
       <p><strong>{{ request.firstName }} {{ request.lastName }}</strong> ({{ request.email }})</p>
       <form [formGroup]="request.form" (ngSubmit)="approveUser(request)">
         <mat-checkbox formControlName="isApproved">Approve</mat-checkbox>

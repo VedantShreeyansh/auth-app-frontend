@@ -3,6 +3,7 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { AppComponent } from '../src/app/app.component';
 import { AuthInterceptorService } from '../src/app/services/auth-interceptor.service';
 import { appConfig } from '../src/app/app.config'; // Ensure you have the correct import for your appConfig
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 bootstrapApplication(AppComponent, {
   providers: [

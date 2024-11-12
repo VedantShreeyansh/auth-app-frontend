@@ -3,29 +3,50 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
+interface UserInfo {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: 'admin' | 'user';
+  status: 'Pending' | 'Approved' | 'Rejected';
+}
+
+interface PendingUser {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: 'admin' | 'user';
+  status: 'Pending' | 'Approved' | 'Rejected';
+  createdAt: Date;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  getRegistrationRequests() {
-    throw new Error('Method not implemented.');
+  private baseUrl = `${environment.apiUrl}/api/User`; // Adjust based on your backend URL
+
+  constructor(private http: HttpClient) {}
+
+  getUserInfo(): Observable<UserInfo> {
+    return this.http.get<UserInfo>(`${this.baseUrl}/info`);
   }
-  private baseUrl = `${environment.apiUrl}/api/users`; // Adjust based on your backend URL
 
-  constructor(private http: HttpClient) { }
+  getPendingUsers(): Observable<PendingUser[]> {
+    return this.http.get<PendingUser[]>(`${this.baseUrl}/pending`);
+  }
 
-  // Fetch pending user registration requests
-   getPendingUsers(): Observable<any[]> {
-     return this.http.get<any[]>(`${this.baseUrl}/pending`);
-   }
+  approveUser(userId: string, role: 'admin' | 'user', isSuperAdmin: boolean): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/${userId}/approve`, { role, isSuperAdmin });
+  }
 
-  // Approve or reject user registration
-   approveUser(approvalData: { userId: string, isApproved: boolean }): Observable<any> {
-     return this.http.post<any>(`${this.baseUrl}/approve`, approvalData);
-   }
+  rejectUser(userId: string, isSuperAdmin: boolean): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${userId}/reject?isSuperAdmin=${isSuperAdmin}`);
+  }
 
-  // Fetch user by ID (make sure userId is the _id (UUID))
-   getUserById(userId: string): Observable<any> {
-     return this.http.get(`${this.baseUrl}/${userId}`);
-   }
+  getUserById(userId: string): Observable<UserInfo> {
+    return this.http.get<UserInfo>(`${this.baseUrl}/${userId}`);
+  }
 }

@@ -68,6 +68,8 @@ export class SignupComponent implements OnInit {
 
     // Create the signup data
     const signupData = {
+      _id: "",
+      _rev: "",
       firstName: this.signupForm.value.firstName,
       lastName: this.signupForm.value.lastName,
       email: this.signupForm.value.email,

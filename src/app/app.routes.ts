@@ -10,7 +10,7 @@ import { PendingApprovalComponent } from './pending-approval/pending-approval.co
 
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 import { UserService } from './services/user.service';
-import { AdminGuard } from './gaurds/admin.guard';
+import { AdminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
   {

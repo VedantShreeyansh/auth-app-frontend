@@ -86,16 +86,6 @@ export class AuthService {
     return localStorage.getItem('sessionId');
   }
 
-  // Fetch pending users
-  getPendingUsers(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/api/User/pending`);
-  }
-
-  // Approve or reject users
-  approveUser(userId: string, isApproved: boolean): Observable<any> {
-    return this.http.post(`${this.apiUrl}/api/User/approve`, { userId, status: isApproved ? 'Approved' : 'Rejected' });
-  }
-
   // Fetch user by ID (make sure it works with _id)
   getUserById(userId: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/api/User/${userId}`);  // Ensure userId is the _id (UUID)

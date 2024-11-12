@@ -84,7 +84,7 @@ export class LoginComponent implements OnInit {
         next: (response) => {
           // Ensure response includes _id (UUID), role, and status
           console.log('Response:', response);
-          if (!response._id || !response.role || !response.status) {
+          if (!response.email || !response.role || !response.status) {
             this.errorMessage = 'Invalid login response.';
             this.snackBar.open(this.errorMessage, 'Close', { duration: 3000 });
             this.loading = false;
