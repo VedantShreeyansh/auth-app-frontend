@@ -13,7 +13,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
-import { v4 as uuidv4 } from 'uuid'; // Import uuid to generate unique IDs
 
 @Component({
   selector: 'app-signup',
@@ -67,17 +66,15 @@ export class SignupComponent implements OnInit {
       return; // Stop if the form is invalid
     }
 
-    // Create the signup data including the _id and Id fields
-    // Simplified Signup Data without Id
+    // Create the signup data
     const signupData = {
-    firstName: this.signupForm.value.firstName,
-    lastName: this.signupForm.value.lastName,
-    email: this.signupForm.value.email,
-    password: this.signupForm.value.password,
-    role: this.signupForm.value.role,
-    status: "Pending" // Default status to 'Pending'
+      firstName: this.signupForm.value.firstName,
+      lastName: this.signupForm.value.lastName,
+      email: this.signupForm.value.email,
+      password: this.signupForm.value.password,
+      role: this.signupForm.value.role,
+      status: "Pending" // Default status to 'Pending'
     };
-
 
     console.log('Signup Data:', signupData); // Add log to inspect the form data
 
@@ -97,8 +94,6 @@ export class SignupComponent implements OnInit {
       error: (err) => {
         // Handle errors and show an appropriate error message
         this.snackBar.open(err.error.message || 'Registration failed!', 'Close', { duration: 3000 });
-        // const errorMessage = err.error?.message || 'Registration failed. Please try again.';
-        // console.error('Registration error:', err); // Log the error for debugging
       }
     });
   }

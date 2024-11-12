@@ -104,16 +104,15 @@ export class LoginComponent implements OnInit {
           console.log('userStatus:', userStatus)
 
           // Role-based redirection based on status
-          if (userStatus === 'Approved') {
+          if (userRole === 'admin' && userStatus === 'Approved') {
             console.log("navigating to the dashboard");
             this.router.navigate(['/dashboard']);
-          }  else if ( userStatus === 'Pending') {
+          } else if (userRole === 'user' && userStatus === 'Approved') {
+            this.router.navigate(['/dashboard']);
+          } else {
             this.errorMessage = 'User is not approved for login.';
             this.router.navigate(['/pending-approval']);
             this.snackBar.open(this.errorMessage, 'Close', { duration: 3000 });
-          }
-          else {
-             this.router.navigate(['/login']);
           }
 
           this.loading = false;

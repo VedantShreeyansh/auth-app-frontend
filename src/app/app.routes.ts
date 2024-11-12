@@ -4,11 +4,13 @@ import { SignupComponent } from './signup/signup.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthGuard } from './services/auth.guard';
 import { AuthService } from './services/auth.service';
+
 import { NoticeboardComponent } from './noticeboard/noticeboard.component';
 import { PendingApprovalComponent } from './pending-approval/pending-approval.component';
+
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
-import { AdminGuard } from './guards/admin.guard';
 import { UserService } from './services/user.service';
+import { AdminGuard } from './gaurds/admin.guard';
 
 export const routes: Routes = [
   {
@@ -38,6 +40,11 @@ export const routes: Routes = [
   { path: 'pending-approval',
    component: PendingApprovalComponent,
     canActivate: [AuthGuard],
+   },
+  { 
+    path: 'pending-approval',
+   component: PendingApprovalComponent,
+   // canActivate: [AuthGuard],
    },
   {
     path: '',
