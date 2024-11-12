@@ -3,11 +3,12 @@ import { RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { NoticeboardComponent } from './noticeboard/noticeboard.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterModule, LoginComponent, SignupComponent, NoticeboardComponent],
+  imports: [RouterModule, LoginComponent, SignupComponent, NoticeboardComponent, DashboardComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

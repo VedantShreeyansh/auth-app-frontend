@@ -1,21 +1,51 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+import { Observable, throwError, of, switchMap } from 'rxjs';
+import { catchError, mergeMap, tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
- private apiUrl = 'http://localhost:5114'; // Replace with your backend URL
+  private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,  private router: Router) { }
 
-  // Method to log in the user
+  // Login method
   login(loginData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/api/Auth/login`, loginData);
+    return this.http.post(`${this.apiUrl}/api/Auth/login`, loginData).pipe(
+      switchMap((response: any) => {
+        console.log('Login Response:', response);
+        if (response.token) {
+          this.storeToken(response.token);
+  
+          const userId = response.user?.id; 
+          if (userId) {
+            return this.getUserById(userId).pipe(
+              tap(user => {
+                localStorage.setItem('userRole', user.role.toLowerCase());
+                localStorage.setItem('userStatus', user.status);
+  
+                const sessionId = new Date().getTime().toString();
+                this.storeSessionId(sessionId);
+              })
+            );
+          }
+        }
+        return of(response); 
+      }),
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 401 && error.error?.message === "User is not approved for login.") {
+          return throwError(() => new Error("User is not approved for login."));
+        }
+        return throwError(() => new Error(error.message));
+      })
+    );
   }
 
-  // Method to register a new user
+  // Register method
   register(user: any): Observable<any> {
     const credentials = {
       firstName: user.firstName,
@@ -23,34 +53,51 @@ export class AuthService {
       email: user.email,
       password: user.password,
       role: user.role,
-      isApproved: false
+      status: 'Pending'
     };
     return this.http.post(`${this.apiUrl}/api/Auth/register`, credentials);
   }
 
-  // Method to store the token in local storage
+  // Store the token in local storage
   storeToken(token: string): void {
     localStorage.setItem('authToken', token);
   }
 
-  // Method to check if the user is logged in
+  // Check if the user is logged in
   isLoggedIn(): boolean {
     return !!localStorage.getItem('authToken');
   }
 
-  // Method to log out the user and remove the token
+  // Logout the user and remove the token
   logout(): void {
     localStorage.removeItem('authToken');
     localStorage.removeItem('sessionId');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userStatus');
   }
 
-  //Method to store session ID in local storage
+  // Store session ID in local storage
   storeSessionId(sessionId: string): void {
     localStorage.setItem('sessionId', sessionId);
   }
 
-  //Method to get session ID from local storage
-  getSesssionId(): string | null {
+  // Get session ID from local storage
+  getSessionId(): string | null {
     return localStorage.getItem('sessionId');
+  }
+
+  // Fetch pending users
+  getPendingUsers(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/api/User/pending`);
+  }
+
+  // Approve or reject users
+  approveUser(userId: string, isApproved: boolean): Observable<any> {
+    return this.http.post(`${this.apiUrl}/api/User/approve`, { userId, status: isApproved ? 'Approved' : 'Rejected' });
+  }
+
+  // Fetch user by ID (make sure it works with _id)
+  getUserById(userId: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/api/User/${userId}`);  // Ensure userId is the _id (UUID)
   }
 }

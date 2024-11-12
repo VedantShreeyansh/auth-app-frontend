@@ -1,4 +1,12 @@
-.wrapper {
+.font {
+  font-weight: bold; 
+  text-transform: uppercase; 
+  color: white; 
+}
+ 
+
+
+  .wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,4 +27,4 @@
 
 button {
   margin-top: 1rem;
-}
+} 
