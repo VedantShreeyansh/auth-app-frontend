@@ -38,15 +38,15 @@ export class UserService {
     return this.http.get<PendingUser[]>(`${this.baseUrl}/pending`);
   }
 
-  approveUser(userId: string, role: 'admin' | 'user', isSuperAdmin: boolean): Observable<void> {
-    return this.http.put<void>(`${this.baseUrl}/${userId}/approve`, { role, isSuperAdmin });
+  approveUser(id: string, role: 'admin' | 'user', isSuperAdmin: boolean): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/${id}/approve`, { role, isSuperAdmin });
   }
 
   rejectUser(userId: string, isSuperAdmin: boolean): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${userId}/reject?isSuperAdmin=${isSuperAdmin}`);
   }
 
-  getUserById(userId: string): Observable<UserInfo> {
-    return this.http.get<UserInfo>(`${this.baseUrl}/${userId}`);
+  getUserById(id: string): Observable<UserInfo> {
+    return this.http.get<UserInfo>(`${this.baseUrl}/${id}`);
   }
 }
