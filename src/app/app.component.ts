@@ -18,8 +18,8 @@ export class AppComponent implements OnInit {
     console.log("Initialized");
   }
   
-  @HostListener('window:beforeunload', ['$event'])
-  clearLocalStorage(event: Event) {
-    localStorage.clear();
-  }
+  // @HostListener('window:beforeunload', ['$event'])
+  // clearSessionStorage(event: Event) {
+  //   sessionStorage.clear();
+  // }
 }

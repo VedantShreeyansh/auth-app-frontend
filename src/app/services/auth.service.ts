@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable, throwError, of, switchMap } from 'rxjs';
-import { catchError, mergeMap, tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 export class AuthService {
   private apiUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient,  private router: Router) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   // Login method
   login(loginData: any): Observable<any> {
@@ -20,21 +20,22 @@ export class AuthService {
         console.log('Login Response:', response);
         if (response.token) {
           this.storeToken(response.token);
-  
-          const userId = response.user?.id; 
+
+          const userId = response.user?.id;
           if (userId) {
             return this.getUserById(userId).pipe(
               tap(user => {
-                localStorage.setItem('userRole', user.role.toLowerCase());
-                localStorage.setItem('userStatus', user.status);
-  
+                sessionStorage.setItem('userRole', user.role.toLowerCase());
+                sessionStorage.setItem('userStatus', user.status);
+                sessionStorage.setItem('userId', user._id);
+
                 const sessionId = new Date().getTime().toString();
                 this.storeSessionId(sessionId);
               })
             );
           }
         }
-        return of(response); 
+        return of(response);
       }),
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401 && error.error?.message === "User is not approved for login.") {
@@ -58,32 +59,37 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/api/Auth/register`, credentials);
   }
 
-  // Store the token in local storage
-  storeToken(token: string): void {
-    localStorage.setItem('authToken', token);
+  // Store the token in session storage
+  private storeToken(token: string): void {
+    sessionStorage.setItem('authToken', token);
   }
 
   // Check if the user is logged in
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('authToken');
+    return !!sessionStorage.getItem('authToken');
   }
 
   // Logout the user and remove the token
   logout(): void {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('sessionId');
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('userStatus');
+    sessionStorage.removeItem('authToken');
+    sessionStorage.removeItem('sessionId');
+    sessionStorage.removeItem('userRole');
+    sessionStorage.removeItem('userStatus');
   }
 
-  // Store session ID in local storage
-  storeSessionId(sessionId: string): void {
-    localStorage.setItem('sessionId', sessionId);
+  // Store session ID in session storage
+  public storeSessionId(sessionId: string): void {
+    sessionStorage.setItem('sessionId', sessionId);
   }
 
-  // Get session ID from local storage
+  // Get session ID from session storage
   getSessionId(): string | null {
-    return localStorage.getItem('sessionId');
+    return sessionStorage.getItem('sessionId');
+  }
+
+  // Clear session ID from session storage
+  clearSessionId(): void {
+    sessionStorage.removeItem('sessionId');
   }
 
   // Fetch user by ID (make sure it works with _id)

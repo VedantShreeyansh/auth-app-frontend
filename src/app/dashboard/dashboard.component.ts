@@ -21,21 +21,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
    private router: Router,
    private timeoutService: TimeoutService
  ) {
-    this.userRole = localStorage.getItem('userRole'); // Ensure correct key
+    this.userRole = sessionStorage.getItem('userRole'); // Ensure correct key
  }
 
- @HostListener('window:beforeunload', ['$event'])
- clearSessionId(event: Event): void {
-   localStorage.removeItem('sessionId');
- }
 
  ngOnDestroy(): void {
    this.timeoutService.clearTimeout();
  }
 
  ngOnInit(): void {
-   console.log(localStorage.getItem("authToken"));
-   this.userRole = localStorage.getItem('userRole'); // Ensure correct key
+   console.log(sessionStorage.getItem("authToken"));
+   this.userRole = sessionStorage.getItem('userRole'); // Ensure correct key
    if (!this.getSessionId()) {
      this.logout();
    }
@@ -50,7 +46,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
  }
 
 getSessionId(): string | null {
-   return localStorage.getItem('sessionId');
+   return sessionStorage.getItem('sessionId');
  }
 
  goToAdminPanel(): void{
@@ -64,10 +60,11 @@ getSessionId(): string | null {
  }
 
  logout(): void {
-   localStorage.removeItem('authToken');
-   localStorage.removeItem('sessionId');
-   localStorage.removeItem('userRole');
-   localStorage.removeItem('userStatus');
+   sessionStorage.removeItem('authToken');
+   sessionStorage.removeItem('sessionId');
+   sessionStorage.removeItem('userRole');
+   sessionStorage.removeItem('userStatus');
+   sessionStorage.removeItem('userId');
    this.router.navigate(['/login']);
   }
 

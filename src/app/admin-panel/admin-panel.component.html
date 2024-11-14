@@ -9,7 +9,7 @@
   <div *ngIf="pendingUsers.length > 0" class="registration-requests">
     <div *ngFor="let request of pendingUsers">
       <p><strong>{{ request.firstName }} {{ request.lastName }}</strong> ({{ request.email }})</p>
-      <form [formGroup]="request.form" (ngSubmit)="approveUser(request)">
+      <form [formGroup]="request.form" (click)="approveUser(request)">
         <mat-checkbox formControlName="isApproved">Approve</mat-checkbox>
         <button mat-raised-button color="primary" type="submit" [disabled]="!request.form.valid">Submit</button>
         <button mat-raised-button color="warn" type="button" (click)="rejectUser(request)">Reject</button>

@@ -10,13 +10,13 @@ export class AdminGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(): boolean {
-    const token = localStorage.getItem('authToken');
-    const userStatus = localStorage.getItem('userStatus');
-    const userRole = localStorage.getItem('userRole');
+    const token = sessionStorage.getItem('authToken');
+    const userStatus = sessionStorage.getItem('userStatus');
+    const userRole = sessionStorage.getItem('userRole');
 
     if (token) {
       console.log("token achieved");
-      console.log(token, userRole, userStatus);
+  //    console.log(token, userRole, userStatus);
 
       // Check if the user is approved
       if (userStatus === 'Approved') {

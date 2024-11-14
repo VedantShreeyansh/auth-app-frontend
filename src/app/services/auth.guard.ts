@@ -11,13 +11,12 @@ export class AuthGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    const token = localStorage.getItem('authToken');
-    const userStatus = localStorage.getItem('userStatus'); // Assuming you store user status in localStorage
-    const userRole = localStorage.getItem('userRole');// Get the user role from local storage
+    const token = sessionStorage.getItem('authToken');
+    const sessionId = this.authService.getSessionId();
+    const userStatus = sessionStorage.getItem('userStatus'); // Assuming you store user status in localStorage
+    const userRole = sessionStorage.getItem('userRole');// Get the user role from local storage
 
-
-
-    if (!token){
+    if (!token || !sessionId){
       this.router.navigate(['/login']);
       return false;
     }

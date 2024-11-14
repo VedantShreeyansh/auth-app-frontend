@@ -89,6 +89,11 @@ export class AdminPanelComponent implements OnInit {
     ).subscribe();
   }
 
+  private updatePendingUsers(userId: string, status: string): void {
+    this.pendingUsers = this.pendingUsers.filter(user => user._id !== userId);
+  }
+
+
   rejectUser(pendingUser: PendingUser): void {
     this.isProcessing = true;
     this.userService.rejectUser(pendingUser._id, this.isSuperAdmin).pipe(
@@ -107,10 +112,7 @@ export class AdminPanelComponent implements OnInit {
     ).subscribe();
   }
 
-  private updatePendingUsers(userId: string, status: string): void {
-    this.pendingUsers = this.pendingUsers.filter(user => user._id !== userId);
-  }
-
+  
   private showSnackbar(message: string): void {
     this.snackBar.open(message, 'Close', {
       duration: 3000,

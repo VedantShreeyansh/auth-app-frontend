@@ -11,7 +11,7 @@ export class AuthInterceptorService implements HttpInterceptor {
   constructor(private snackBar: MatSnackBar, private router: Router) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = localStorage.getItem('authToken'); // Ensure the key matches what's in AuthService
+    const token = sessionStorage.getItem('authToken'); // Ensure the key matches what's in AuthService
     console.log('Token in interceptor:', token);
 
     const authReq = token ? req.clone({ headers: req.headers.set('Authorization', `Bearer ${token}`) }) : req;

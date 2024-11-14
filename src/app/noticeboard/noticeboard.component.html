@@ -1,21 +1,32 @@
 <div class="noticeboard-container">
   <div class="messages">
-    <div *ngFor="let message of messages">
-      <p><strong>{{ message.sender }}:</strong> {{ message.text }}</p>
+    <div *ngFor="let message of messages" 
+         [ngClass]="{
+           'sent senderCard': message.sender === currentUserId, 
+           'received receiverCard': message.receiver === currentUserId
+         }">
+      <div class="message-card">
+        <p class="message-text">{{ message.text }}</p>
+        <p class="message-info">
+          <strong>
+            {{ message.sender }}
+          </strong> 
+          <small>{{ message.timestamp | date:'shortTime' }}</small>
+        </p>
+      </div>
     </div>
   </div>
-  <form [formGroup]="noticeForm" (ngSubmit)="sendMessage()">
-    <mat-form-field appearance="fill">
+  <form [formGroup]="noticeForm" (ngSubmit)="sendMessage()" class="message-form">
+    <mat-form-field appearance="fill" class="message-input">
       <mat-label>Message</mat-label>
       <input matInput formControlName="message" required>
     </mat-form-field>
-    <mat-form-field appearance="fill">
-      <mat-label>Role/Group</mat-label>
-      <mat-select formControlName="role" required>
-        <mat-option value="user">User</mat-option>
-        <mat-option value="admin">Admin</mat-option>
-      </mat-select>
+    <mat-form-field appearance="fill" class="receiver-input">
+      <mat-label>Receiver</mat-label>
+      <input matInput formControlName="receiver" required>
     </mat-form-field>
-    <button mat-raised-button color="primary" type="submit" [disabled]="noticeForm.invalid" ng-click="sendMessage()">Send</button>
+    <button mat-icon-button color="primary" type="submit" [disabled]="noticeForm.invalid">
+      <mat-icon>send</mat-icon>
+    </button>
   </form>
 </div>

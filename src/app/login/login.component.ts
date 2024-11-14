@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { AuthGuard } from '../services/auth.guard';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -57,7 +58,9 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.authService.clearSessionId();
+  }
 
   onSubmit(): void {
     console.log("Initializing the submit function");
@@ -91,17 +94,20 @@ export class LoginComponent implements OnInit {
             return;
           }
 
-         
           // Store token and session ID
-        //  this.authService.storeToken(response.token);
-        //  const sessionId = new Date().getTime().toString();
-        //  this.authService.storeSessionId(sessionId);
+          // const sessionId = new Date().getTime().toString();
+          // this.authService.storeSessionId(sessionId);
 
           const userRole = response?.role.toLowerCase();
           const userStatus = response?.status;
 
           console.log('userRole:', userRole);
-          console.log('userStatus:', userStatus)
+          console.log('userStatus:', userStatus);
+  
+
+          if(sessionStorage.getItem('authToken')){
+            this.router.navigate(['/dashboard']);
+          }
 
           // Role-based redirection based on status
           if (userRole === 'admin' && userStatus === 'Approved') {

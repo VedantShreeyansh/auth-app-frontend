@@ -4,15 +4,12 @@
   color: white; 
 }
  
-
-
   .wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
 }
-
 
 .font {
   font-weight: bold; 
