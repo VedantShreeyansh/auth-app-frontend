@@ -24,11 +24,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.userRole = sessionStorage.getItem('userRole'); // Ensure correct key
  }
 
-
- ngOnDestroy(): void {
-   this.timeoutService.clearTimeout();
- }
-
  ngOnInit(): void {
    console.log(sessionStorage.getItem("authToken"));
    this.userRole = sessionStorage.getItem('userRole'); // Ensure correct key
@@ -37,6 +32,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
    }
    if (this.userRole === 'admin'){
      this.onTabChange({
+      index: 0,
        tab:{
        textLabel: 'A'
        }
@@ -44,6 +40,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
    }
    console.log('User Role in Dashboard:', this.userRole);
  }
+
+ ngOnDestroy(): void {
+  this.timeoutService.clearTimeout();
+}
 
 getSessionId(): string | null {
    return sessionStorage.getItem('sessionId');
@@ -68,17 +68,23 @@ getSessionId(): string | null {
    this.router.navigate(['/login']);
   }
 
+  clearTimeout(): void {
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+      this.timeoutId = null;
+    }
+  }
+
   onTabChange(event: any): void {
-   if (this.timeoutId) {
-     clearTimeout(this.timeoutId);    }
-    if (event.index === 0) {
-     this.timeoutId = setTimeout(() => {
-       this._snackBar.open('Tab 0 selected', 'Close', { duration: 2000 });
-      }, 1000);
+    this.clearTimeout();
+    if ((event.index === 0 && this.userRole === 'admin') || (event.index === 5 && this.userRole === 'user')) {
+      this.timeoutId = setTimeout(() => {
+        this._snackBar.open('Session timed out. Logging out...', 'Close', { duration: 3000 });
+        this.logout();
+      }, 20000); // 20 seconds
     }
   }
 }
-
 
 
 
