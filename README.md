@@ -13,6 +13,6 @@ This contains the frontend code and UI snapshots for the angular authentication 
 
   ![screenshot-1741801163240](https://github.com/user-attachments/assets/bbec3f67-bc07-4668-97a5-205e736c1215)
 
-  ![screenshot-1741801344464](https://github.com/user-attachments/assets/52af46c8-85ac-40da-b769-bfaf0f86b121)
+ ![screenshot-1741801344464](https://github.com/user-attachments/assets/52af46c8-85ac-40da-b769-bfaf0f86b121)
 
 ![screenshot-1741801376862](https://github.com/user-attachments/assets/0fe50fe0-4961-447a-8b57-65641aa80540)
